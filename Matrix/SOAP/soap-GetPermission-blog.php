@@ -38,13 +38,13 @@ try {
     $client = new SoapClient($cfg['MatrixSOAP']['server'], $cfg['MatrixSOAP']['login']);
 
     //--------------------------------------------------------------------------->
-    // 26-07-2011 | Andrew DUNBAR | Get 'PageContents' from asset.
+    // 26-07-2011 | Andrew DUNBAR | Get 'GetPermission' from asset.
     //--------------------------------------------------------------------------->
 
-    // See Squiz manual on 'PageContents' http://manuals.matrix.squizsuite.net/web-services/chapters/soap-api-asset-service/#getpagecontents
-    $serviceVars   = array('AssetID' => 'XXXXXXXX', 'RootNodeID' => 'YYYYY');
-    $result        = $client->GetPageContents($serviceVars);
-    $whichFunction = "GetPageContents";
+    // See Squiz manual on 'GetPermission' http://manuals.matrix.squizsuite.net/web-services/chapters/soap-api-permissions-and-role-service/#getpermission
+    $serviceVars   = array('AssetID' => 'XXXXXXXX', 'PermissionLevel' => 'Write');
+    $result        = $client->GetPermission($serviceVars);
+    $whichFunction = "GetPermission";
 
     //--------------------------------------------------------------------------->
     // 26-07-2011 | Andrew DUNBAR | Was previous webservices call successful?
@@ -60,7 +60,7 @@ try {
 
             $pageContent .= "    <tr>\n";
             $pageContent .= "        <th valign=\"top\">".$resultKeys."</th>\n";
-            $pageContent .= "        <td valign=\"top\">".$resultValues."</td>\n";
+            $pageContent .= "        <td valign=\"top\">".processArray($resultValues)."</td>\n";
             $pageContent .= "    </tr>\n";
 
         }
@@ -152,7 +152,7 @@ $pageOutput .= "        <td width=\"400\">".$cfg['MatrixSOAP']['server']."</td>\
 $pageOutput .= "    </tr>\n";
 $pageOutput .= "</table>\n";
 $pageOutput .= "<h3>Example: ".$whichFunction."</h3>\n";
-$pageOutput .= "<table summary=\"".$whichFunction."\" border=\"0\" width=\"600\" cellspacing=\"0\" cellpadding=\"5\" class=\"styledTable\">\n";
+$pageOutput .= "<table summary=\"".$whichFunction."\" border=\"0\" width=\"1000\" cellspacing=\"0\" cellpadding=\"5\" class=\"styledTable\">\n";
 $pageOutput .= "    <thead>\n";
 $pageOutput .= "    <tr>\n";
 $pageOutput .= "        <th width=\"250\">SOAP Key</th>\n";
@@ -172,3 +172,31 @@ $pageOutput .= "</html>\n";
 //--------------------------------------------------------------------------->
 
 print $pageOutput;
+
+//---------------------------------------------------------------------------------------------------------------------------->
+
+/**
+ * Description: Process the specified array into values.
+ *
+ * @param string $array Takes incoming 'array' to process.
+ *
+ * @return string
+ *
+*/
+
+function processArray($array)
+{
+
+    $theReturn = "";
+
+    foreach ($array as $arrayKey => $arrayValues) {
+
+        $theReturn .=  $arrayValues->UserID."<br />";
+
+    }
+
+    return $theReturn;
+
+}
+
+//---------------------------------------------------------------------------------------------------------------------------->
